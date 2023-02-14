@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
       print('Latitude:${p.latitude}, Longitude:${p.longitude}');
       
     }else{
-      print('Data unavailable');
+      print('unavailable');
+      
     }
   }
 }

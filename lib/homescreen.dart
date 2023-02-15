@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -64,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onFieldSubmitted: (String name) {
                       setState(() {
                         cityname = name;
-
+                        getCityWeather(cityname);
                         isloaded = false;
                         controller.clear();
                       });
@@ -106,12 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       size: 40,
                       color: Colors.red,
                     ),
-                    Text(
-                      cityname,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        cityname,
+                        overflow: TextOverflow.ellipsis,
+                        
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -148,27 +153,35 @@ class _HomeScreenState extends State<HomeScreen> {
       forceAndroidLocationManager: true,
     );
     if (p != null) {
-      print('Latitude:${p.latitude}, Longitude:${p.longitude}');
+      //print('Latitude:${p.latitude}, Longitude:${p.longitude}');
       getCurrentCityWeather(p);
     } else {
       print('Data Unavailable');
     }
-    getCityWeather(String cityname) async {
-      var client = http.Client();
-      var uri = '${k.domain}q=$cityname &appid=${k.apiKey}';
-      var url = Uri.parse(uri);
-      var response = await client.get(url);
-      if (response.statusCode == 200) {
-        var data = response.body;
-        var decodedData = json.decode(data);
-        print(data);
-        updateUI(decodedData);
-        setState(() {
-          isloaded = true;
-        });
-      } else {
-        print(response.statusCode);
-      }
+  }
+
+  getCityWeather(String cityname) async {
+    var client = http.Client();
+    var decodedData;
+    var uri = '${k.domain}q=$cityname&appid=${k.apiKey}';
+    var url = Uri.parse(uri);
+    var response = await client.get(url);
+    if (response.statusCode == 200) {
+      var data = response.body;
+      var decodedData = json.decode(data);
+      print(data);
+      updateUI(decodedData);
+      setState(() {
+        isloaded = true;
+      });
+    } else {
+      decodedData=null;
+      updateUI(decodedData);
+      setState(() {
+        isloaded = true;
+      });
+     
+      print("Cannot fetch the city weather ${response.statusCode}");
     }
   }
 
@@ -187,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
         isloaded = true;
       });
     } else {
+      
       print(response.statusCode);
     }
   }
@@ -198,7 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
         pressure = 0;
         humidity = 0;
         cover = 0;
-        cityname = "not available";
+        cityname = " Not available";
+        
+       
       } else {
         temperature = decodedData['main']['temp'] - 273;
         pressure = decodedData['main']['pressure'];
@@ -220,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class CustomCard extends StatelessWidget {
   String text;
   String image;
-  CustomCard({required this.text, required this.image});
+  CustomCard({super.key, required this.text, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +254,7 @@ class CustomCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade900,
-            offset: Offset(1, 2),
+            offset: const Offset(1, 2),
             blurRadius: 3,
             spreadRadius: 1,
           ),
@@ -258,6 +274,7 @@ class CustomCard extends StatelessWidget {
           ),
           Text(
             text,
+            
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,

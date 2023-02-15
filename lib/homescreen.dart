@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onFieldSubmitted: (String name) {
                       setState(() {
                         cityname = name;
+
                         isloaded = false;
                         controller.clear();
                       });
@@ -119,162 +120,21 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * .12,
-                margin: const EdgeInsets.symmetric(
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade900,
-                      offset: Offset(1, 2),
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Image(
-                      image: const AssetImage('assets/images/thermometer.png'),
-                      width: MediaQuery.of(context).size.width * 0.15,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      'Temperature: ${temperature?.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+              CustomCard(
+                text: 'Temperature: ${temperature?.toStringAsFixed(1)}ºC',
+                image: 'assets/images/thermometer.png',
               ),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * .12,
-                margin: const EdgeInsets.symmetric(
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade900,
-                      offset: Offset(1, 2),
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Image(
-                      image: const AssetImage('assets/images/thermometer.png'),
-                      width: MediaQuery.of(context).size.width * 0.15,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      'Pressure: ${pressure!.toInt()} hPa',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+              CustomCard(
+                text: 'Pressure: ${pressure?.toInt()} hPa',
+                image: 'assets/images/pressure.png',
               ),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * .12,
-                margin: const EdgeInsets.symmetric(
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade900,
-                      offset: Offset(1, 2),
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Image(
-                      image: const AssetImage('assets/images/thermometer.png'),
-                      width: MediaQuery.of(context).size.width * 0.15,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      'Humidity: ${humidity!.toInt()}%',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+              CustomCard(
+                text: 'Humidity: ${humidity?.toInt()} %',
+                image: 'assets/images/humidity.png',
               ),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * .12,
-                margin: const EdgeInsets.symmetric(
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade900,
-                      offset: Offset(1, 2),
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Image(
-                      image: const AssetImage('assets/images/thermometer.png'),
-                      width: MediaQuery.of(context).size.width * 0.15,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      'Cloud cover: ${cover!.toInt()}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              CustomCard(
+                  text: 'Cloud cover: ${cover?.toInt()} %',
+                  image: 'assets/images/cloud.png'),
             ],
           ),
         ),
@@ -295,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     getCityWeather(String cityname) async {
       var client = http.Client();
-      var uri = '${k.domain}q=${cityname}&appid=${k.apiKey}';
+      var uri = '${k.domain}q=$cityname &appid=${k.apiKey}';
       var url = Uri.parse(uri);
       var response = await client.get(url);
       if (response.statusCode == 200) {
@@ -348,10 +208,63 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     controller.dispose();
+  }
+}
+
+class CustomCard extends StatelessWidget {
+  String text;
+  String image;
+  CustomCard({required this.text, required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * .12,
+      margin: const EdgeInsets.symmetric(
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(15),
+        ),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade900,
+            offset: Offset(1, 2),
+            blurRadius: 3,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image(
+              image: AssetImage(image),
+              width: MediaQuery.of(context).size.width * 0.15,
+            ),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

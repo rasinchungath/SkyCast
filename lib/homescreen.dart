@@ -48,20 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
           visible: isloaded,
           replacement: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: const [
               CircularProgressIndicator(),
-              SizedBox(height: 10,),
-              Text('Loading.....',
-               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-               ),
-               ),
-
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Loading.....',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
             ],
           ),
-          
           child: Column(
             children: [
               Container(
@@ -127,9 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         cityname,
                         overflow: TextOverflow.ellipsis,
-                        
                         style: const TextStyle(
-                          fontSize: 28,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -190,12 +190,12 @@ class _HomeScreenState extends State<HomeScreen> {
         isloaded = true;
       });
     } else {
-      decodedData=null;
+      decodedData = null;
       updateUI(decodedData);
       setState(() {
         isloaded = true;
       });
-     
+
       print("Cannot fetch the city weather ${response.statusCode}");
     }
   }
@@ -209,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       var data = response.body;
       var decodedData = json.decode(data);
-     //print(data);
+      //print(data);
       updateUI(decodedData);
       setState(() {
         isloaded = true;
@@ -227,8 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
         humidity = 0;
         cover = 0;
         cityname = "Not available";
-        
-       
       } else {
         temperature = decodedData['main']['temp'] - 273;
         pressure = decodedData['main']['pressure'];
@@ -246,4 +244,3 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.dispose();
   }
 }
-

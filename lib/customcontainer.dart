@@ -41,7 +41,6 @@ class CustomCard extends StatelessWidget {
           ),
           Text(
             text,
-            
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,

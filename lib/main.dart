@@ -5,9 +5,8 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
-      primaryColor: Colors.white,
-      accentColor: Colors.white,
+     primaryColor: Colors.white,
     ),
     home: const SplashScreen(),
   ));
-}
+}  
